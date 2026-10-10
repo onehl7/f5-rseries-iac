@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "f5devcentral.vscode-f5",
+    "hashicorp.terraform",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "bierner.markdown-mermaid"
+  ]
+}

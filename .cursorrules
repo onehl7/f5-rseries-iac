@@ -1,0 +1,21 @@
+# F5 rSeries IaC Migration Repository Rules
+
+1. Architectural Decoupling:
+   - Layer 0: F5OS-A Host Layer (modules/f5os/)
+   - Layer 1: TMOS Onboarding Layer via Declarative Onboarding (modules/tenant-onboarding/)
+   - Layer 2: Application Delivery Layer via AS3 (modules/services/)
+   - Never mix F5OS chassis management with TMOS application declarations.
+
+2. Hardware Limits (F5 r5900):
+   - Total cores per appliance: 16 physical cores (32 hyperthreaded threads).
+   - Maximum tenant vCPU allocation per appliance: 28 vCPUs (reserving 4 vCPUs headroom + 8 host overhead).
+   - Standard allocation: Tenant 1 (DNS) = 4 vCPUs; Tenant 2 (LTM) = 16 vCPUs.
+
+3. HA Conventions:
+   - F5 DNS: Active/Active anycast query engine + iQuery mesh sync group.
+   - F5 LTM: Active/Standby Sync-Failover device group within each physical pair (Pair-A, Pair-B).
+
+4. Declarative Standard:
+   - AS3 Schema v3.50.0+
+   - DO Schema v1.42.0+
+   - Always ensure pool members have valid health monitors with HTTP/1.1 syntax.

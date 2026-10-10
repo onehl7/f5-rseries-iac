@@ -1,0 +1,51 @@
+# Pre-commit configuration for F5 iSeries to rSeries IaC Platform
+# Runs automated formatting, syntax checks, and linting locally before git commits.
+# To install: pre-commit install
+# To run manually: pre-commit run --all-files
+
+repos:
+  # ============================================================================
+  # 1. Official Pre-Commit Hooks (Maintained by the core pre-commit organization)
+  # Repository: https://github.com/pre-commit/pre-commit-hooks
+  # Security: Official project, widely audited, pinned to immutable release tag
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # Removes trailing spaces from line endings across all text files
+      - id: trailing-whitespace
+      # Ensures all files end with a single newline (POSIX compliant)
+      - id: end-of-file-fixer
+      # Validates YAML syntax for GitHub Actions workflows and config files
+      - id: check-yaml
+      # Validates JSON syntax for AS3/DO schemas and assessment outputs
+      - id: check-json
+      # Prevents accidental commits containing Git merge conflict markers (<<<<<<<)
+      - id: check-merge-conflict
+
+  # ============================================================================
+  # 2. Terraform Linters (Maintained by Anton Babenko - HashiCorp Ambassador)
+  # Repository: https://github.com/antonbabenko/pre-commit-terraform
+  # Security: De-facto industry standard (11k+ stars), pinned to immutable tag
+  # ============================================================================
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      # Rewrites all .tf and .tfvars files into canonical HashiCorp formatting
+      - id: terraform_fmt
+      # Runs TFLint recursively across all modules to catch bugs and schema errors
+      - id: terraform_tflint
+        args:
+          - --args=--recursive
+
+  # ============================================================================
+  # 3. Python Code Formatter (Maintained by the Python Software Foundation - PSF)
+  # Repository: https://github.com/psf/black
+  # Security: Official PSF repository, deterministic formatting, pinned to tag
+  # ============================================================================
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      # Deterministically formats Python assessment scripts and unit tests
+      - id: black
+        files: ^tools/

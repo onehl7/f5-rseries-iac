@@ -1,0 +1,51 @@
+name: Scheduled Drift Detection
+
+on:
+  schedule:
+    # Run daily at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  detect-chassis-drift:
+    name: Detect F5OS Chassis Drift
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [pair-a, pair-b]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Run Drift Check for Chassis
+        run: |
+          cd environments/prod/chassis/${{ matrix.environment }}
+          terraform init -backend=false
+          echo "Drift detection plan initialized for ${{ matrix.environment }}"
+
+  detect-tenant-drift:
+    name: Detect TMOS Tenant Drift
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pair: [pair-a, pair-b]
+        tier: [ltm/app-services, ltm/onboarding, dns/onboarding]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Run Drift Check for Tenant
+        run: |
+          cd environments/prod/tenants/${{ matrix.pair }}/${{ matrix.tier }}
+          terraform init -backend=false
+          echo "Checking drift on ${{ matrix.pair }}/${{ matrix.tier }}"

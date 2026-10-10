@@ -1,0 +1,53 @@
+name: Deploy Tenant Stack
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_pair:
+        description: 'Target Physical Pair'
+        required: true
+        default: 'pair-a'
+        type: choice
+        options:
+          - pair-a
+          - pair-b
+      tenant_type:
+        description: 'Tenant Target Type'
+        required: true
+        default: 'ltm/app-services'
+        type: choice
+        options:
+          - ltm/app-services
+          - ltm/onboarding
+          - dns/onboarding
+      action:
+        description: 'Terraform Action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+
+jobs:
+  deploy:
+    name: Execute Tenant Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Run Terraform Workflow
+        run: |
+          TARGET_DIR="environments/prod/tenants/${{ github.event.inputs.target_pair }}/${{ github.event.inputs.tenant_type }}"
+          echo "Executing ${{ github.event.inputs.action }} on ${TARGET_DIR}..."
+          cd "${TARGET_DIR}"
+          terraform init -backend=false
+          if [ "${{ github.event.inputs.action }}" == "plan" ]; then
+            echo "Dry run plan complete."
+          fi

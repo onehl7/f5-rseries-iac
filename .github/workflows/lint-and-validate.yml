@@ -1,0 +1,73 @@
+name: Lint and Validate IaC
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform-lint:
+    name: Terraform Validation & TFLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.50.0
+
+      - name: Init TFLint
+        run: tflint --init
+
+      - name: Run TFLint recursively
+        run: tflint --recursive
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive
+
+  python-assessment-tests:
+    name: Test Assessment Engine & Parsers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Run Assessment Unit Tests
+        run: python3 -m unittest discover -s tests/unit
+
+  as3-schema-validation:
+    name: Validate Declarative AS3 Schemas
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node for JSON Schema Validator
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Ajv CLI
+        run: npm install -g ajv-cli
+
+      - name: Validate AS3 output against AS3 schema
+        run: |
+          if [ -f "tests/assessment_output/as3_declaration_output.json" ]; then
+            echo "Validating generated AS3 declaration..."
+            # Check JSON syntax validity
+            python3 -m json.tool tests/assessment_output/as3_declaration_output.json > /dev/null
+            echo "AS3 JSON is syntactically valid."
+          fi

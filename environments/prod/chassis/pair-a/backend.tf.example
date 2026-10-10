@@ -1,0 +1,12 @@
+# Example Remote State Backend Configuration
+# Rename to backend.tf and replace bucket / region / table with your cloud values.
+
+terraform {
+  backend "s3" {
+    bucket         = "YOUR-F5-TFSTATE-BUCKET"
+    key            = "prod/chassis/pair-a/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "f5-terraform-state-locks"
+  }
+}

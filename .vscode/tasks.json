@@ -1,0 +1,58 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "F5: Run Migration Assessment (Sample Fixture)",
+      "type": "shell",
+      "command": "python3 tools/assessment/run_assessment.py --config tests/fixtures/legacy_iseries_bigip.conf --model i5800 --output ./assessment_output/",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "F5: Run Assessment Unit Tests",
+      "type": "shell",
+      "command": "python3 -m unittest discover -s tests/unit",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Terraform: Format All Files",
+      "type": "shell",
+      "command": "terraform fmt -recursive",
+      "problemMatcher": []
+    },
+    {
+      "label": "Terraform: Plan Pair-A Chassis",
+      "type": "shell",
+      "command": "cd environments/prod/chassis/pair-a && terraform init && terraform plan",
+      "problemMatcher": []
+    },
+    {
+      "label": "Terraform: Plan Pair-A LTM Onboarding",
+      "type": "shell",
+      "command": "cd environments/prod/tenants/pair-a/ltm/onboarding && terraform init && terraform plan",
+      "problemMatcher": []
+    },
+    {
+      "label": "Terraform: Plan Pair-A LTM App Services (AS3)",
+      "type": "shell",
+      "command": "cd environments/prod/tenants/pair-a/ltm/app-services && terraform init && terraform plan",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "editor.formatOnSave": true,
+  "terraform.languageServer": {
+    "external": true
+  },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "python.analysis.extraPaths": [
+    "./tools/assessment"
+  ],
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "*as3*.json",
+        "*as3_declaration*.json"
+      ],
+      "url": "https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema.json"
+    },
+    {
+      "fileMatch": [
+        "*do*.json",
+        "*onboarding*.json"
+      ],
+      "url": "https://raw.githubusercontent.com/F5Networks/f5-declarative-onboarding/master/schema/latest/base.schema.json"
+    }
+  ]
+}
