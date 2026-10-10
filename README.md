@@ -101,6 +101,7 @@ This repository includes full native support for VS Code:
 ---
 
 ## Documentation Links
+- [AI Chat Prompt Playbook (Antigravity & VS Code)](file:///Users/hl/Documents/antigravity/IaC%20F5/docs/ai-chat-prompt-guide.md)
 - [Day-0 Hardware & Network Pre-requisites](file:///Users/hl/Documents/antigravity/IaC%20F5/docs/hardware-commissioning-prerequisites.md)
 - [Remote State Management & Locking Guide](file:///Users/hl/Documents/antigravity/IaC%20F5/docs/remote-state-management.md)
 - [Architecture Blueprint](file:///Users/hl/Documents/antigravity/IaC%20F5/docs/architecture.md)
